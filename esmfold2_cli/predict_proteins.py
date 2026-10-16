@@ -1,3 +1,4 @@
+import argparse
 import csv
 from pathlib import Path
 
@@ -82,48 +83,46 @@ def make_predictions(
             )
 
 
+def main():
+    parser = argparse.ArgumentParser(description="Process a FASTA file.")
+    parser.add_argument(
+        "--input",
+        "-i",
+        type=Path,
+        required=True,
+        help="Path to the input FASTA file",
+    )
+    parser.add_argument(
+        "--max-length",
+        "-l",
+        type=int,
+        help="Skip sequences longer than max length",
+        default=float("inf"),
+    )
+    parser.add_argument(
+        "--skip-completed",
+        "-s",
+        action="store_true",
+        help="Skip completed sequences in data.tsv",
+    )
+    parser.add_argument(
+        "--out-dir",
+        "-o",
+        type=Path,
+        required=True,
+        help="Directory for output files",
+    )
+
+    args = parser.parse_args()
+
+    if not args.input.is_file():
+        parser.error(f"Input file does not exist: {args.input}")
+    make_predictions(
+        args.input,
+        args.out_dir,
+        max_length=args.max_length,
+        skip_completed=args.skip_completed,
+    )
+
 if __name__ == "__main__":
-    import argparse
-
-    def main():
-        parser = argparse.ArgumentParser(description="Process a FASTA file.")
-        parser.add_argument(
-            "--input",
-            "-i",
-            type=Path,
-            required=True,
-            help="Path to the input FASTA file",
-        )
-        parser.add_argument(
-            "--max-length",
-            "-l",
-            type=int,
-            help="Skip sequences longer than max length",
-            default=float("inf"),
-        )
-        parser.add_argument(
-            "--skip-completed",
-            "-s",
-            action="store_true",
-            help="Skip completed sequences in data.tsv",
-        )
-        parser.add_argument(
-            "--out-dir",
-            "-o",
-            type=Path,
-            required=True,
-            help="Directory for output files",
-        )
-
-        args = parser.parse_args()
-
-        if not args.input.is_file():
-            parser.error(f"Input file does not exist: {args.input}")
-        make_predictions(
-            args.input,
-            args.out_dir,
-            max_length=args.max_length,
-            skip_completed=args.skip_completed,
-        )
-
     main()

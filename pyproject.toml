@@ -9,3 +9,22 @@ src_paths = ["workflow/scripts"]
 
 [tool.pyright]
 defineConstant = { DEBUG = true }
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "esmfold2-cli"
+version = "0.1.0"
+description = "A small command-line tool for ESMFold2 predictions"
+requires-python = ">=3.9"
+dependencies = [
+    "esm>=3.4.1.post1,<4"
+]
+
+[project.scripts]
+esmfold2-predict = "esmfold2_cli.predict_proteins:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
